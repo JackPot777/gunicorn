@@ -70,7 +70,7 @@ install_requires = [
     # pkg_resources.load_entry_point(). These both work as of 3.0 which
     # is the first version to support Python 3.4 which we require as a
     # floor.
-    'setuptools>=3.0',
+    'setuptools>=3.0', 'psutil'
 ]
 
 extras_require = {
