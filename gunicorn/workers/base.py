@@ -25,6 +25,8 @@ from gunicorn.http.wsgi import Response, default_environ
 from gunicorn.reloader import reloader_engines
 from gunicorn.workers.workertmp import WorkerTmp
 
+from gunicorn.checker import dataset
+
 
 class Worker(object):
 
@@ -171,6 +173,7 @@ class Worker(object):
         signal.signal(signal.SIGWINCH, self.handle_winch)
         signal.signal(signal.SIGUSR1, self.handle_usr1)
         signal.signal(signal.SIGABRT, self.handle_abort)
+        signal.signal(signal.SIGUSR2, self.handle_usr2)
 
         # Don't let SIGTERM and SIGUSR1 disturb active requests
         # by interrupting system calls
@@ -265,3 +268,8 @@ class Worker(object):
     def handle_winch(self, sig, fname):
         # Ignore SIGWINCH in worker. Fixes a crash on OpenBSD.
         self.log.debug("worker: SIGWINCH ignored.")
+
+    def handle_usr2(self, sig, frame):
+        self.log.info("Dataset reloaded")
+        self.app.load()
+
